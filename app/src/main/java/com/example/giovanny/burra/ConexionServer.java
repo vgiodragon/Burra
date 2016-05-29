@@ -17,14 +17,14 @@ import java.net.URL;
  * Created by giovanny on 26/05/16.
  */
 public class ConexionServer {
-
+    String urlfijo = "http://52.37.128.123:8081/petition/";
 
     String sendToUrl(String myurl) throws IOException {
         InputStream is = null;
         int len = 100;
 
         try {
-            URL url = new URL(myurl);
+            URL url = new URL(urlfijo+myurl);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
             conn.setRequestMethod("GET");
@@ -32,8 +32,6 @@ public class ConexionServer {
 
             // Starts the query
             conn.connect();
-            int response = conn.getResponseCode();
-            Log.d("respuesta", "The response is: " + response);
             is = conn.getInputStream();
 
             // Convert the InputStream into a string
