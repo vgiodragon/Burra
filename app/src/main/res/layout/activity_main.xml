@@ -23,16 +23,22 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/spiBurra"
-                android:spinnerMode="dropdown"
-                android:layout_gravity="left" />
+                android:spinnerMode="dropdown" />
 
             <ImageButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/imageButton"
                 android:src="@mipmap/burra"
-                android:layout_gravity="right"
                 android:onClick="CamaraBurra" />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="New Button"
+                android:id="@+id/button"
+                android:nestedScrollingEnabled="false"
+                android:onClick="lanza" />
         </LinearLayout>
 
         <fragment

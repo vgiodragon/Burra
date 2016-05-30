@@ -2,6 +2,7 @@ package com.example.giovanny.burra;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
 import android.location.Location;
@@ -75,6 +76,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
     }
+
+    public void lanza(View view){
+
+        startActivity(new Intent(this, TurnoActivity.class));
+    }
+
 
     public boolean checkLocationPermission() {
         if (ContextCompat.checkSelfPermission(this,
