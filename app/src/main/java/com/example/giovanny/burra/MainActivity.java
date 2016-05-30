@@ -1,7 +1,6 @@
 package com.example.giovanny.burra;
 
 import android.Manifest;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
@@ -13,10 +12,13 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.example.giovanny.burra.Estaciones.MarkersYMas;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -34,18 +36,16 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener, OnMapReadyCallback {
     private Context c = this;
     private int TiempoCiclo = 2800;
-    boolean activado;
+    boolean activado , camaraBurra;
     GoogleMap mMap;
     double l1 = -12.045196, l2 = -77.032163;
     ArrayAdapter<CharSequence> adapter;
     private final int code_request = 1234;
-    Marker mN,mS,mE;
-    Marker mBurra;
+    Marker mN,mS,mE, mBurra;
     ArrayList<Marker> mparadero;
     ConexionServer cs;
     String bus;
     MarkersYMas paraderos;
-    private ProgressDialog mProgressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,14 +59,16 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         mparadero = new ArrayList<>();
         paraderos = new MarkersYMas();
 
-
+        camaraBurra=false;
         bus = "Sur";
         Spinner spinner = (Spinner) findViewById(R.id.spiBurra);
         spinner.setOnItemSelectedListener(this);
+
         adapter = ArrayAdapter.createFromResource(this,
                 R.array.burra_array, android.R.layout.simple_spinner_item);
 
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
         spinner.setAdapter(adapter);
 
         MapFragment mapFragment = (MapFragment) getFragmentManager()
@@ -74,21 +76,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         mapFragment.getMapAsync(this);
     }
 
-    private void showProgressDialog() {
-        if (mProgressDialog == null) {
-            mProgressDialog = new ProgressDialog(this);
-            mProgressDialog.setMessage("Cargando Mapa");
-            mProgressDialog.setIndeterminate(true);
-        }
-        mProgressDialog.show();
-    }
-
-    private void hideProgressDialog() {
-        if (mProgressDialog != null && mProgressDialog.isShowing()) {
-            mProgressDialog.hide();
-
-        }
-    }
     public boolean checkLocationPermission() {
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_FINE_LOCATION)
@@ -127,22 +114,21 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     mMap.getUiSettings().setZoomControlsEnabled(true);
                 }
             } else {
-                // Permission was denied. Display an error message.
             }
         }
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        showProgressDialog();
+    public void CamaraBurra(View view){
+        double []ll = getLanLon();
+        if(ll[0]!=-12.045196 && ll[1]!=-77.032163 && !bus.equals("Las Tres")){
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(l1, l2)));
+        }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         activado = true;
-        hideProgressDialog();
     }
 
     @Override
@@ -192,6 +178,24 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         }
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu, menu);//Menu Resource, Menu
+        return true;
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.Credits:
+                Toast.makeText(getApplicationContext(),"Burra V1\n" +
+                                "Esto fue creado por Estudiantes para Estudiantes.\n" +
+                                "Sugerencias, quejas o insultos con Gian Nicola Monero ;)" +
+                        "\nAtte. GioDev", Toast.LENGTH_LONG).show();
+                return true;
+        }
+        return true;
+    }
+
     public void RemoveMarkers(){
         while(mparadero.size()>0){
             mparadero.get(0).remove();
@@ -203,10 +207,17 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         if(!bus.equals(adapter.getItem(position))){
             bus= (String) adapter.getItem(position);
-            RemoveMarkers();
-            setParaderos(bus);
+            if(bus.equals("Las Tres")){
+                setParaderos("Norte");
+                setParaderos("Sur");
+                setParaderos("Este");
+            }
+            else{
+                RemoveMarkers();
+                setParaderos(bus);
+                camaraBurra=true;
+            }
         }
-
     }
 
     @Override
@@ -282,8 +293,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             public void run() {
                 String []part= aca.split(":");
                 if(part[0]!=null) {
-                    l1 = Double.parseDouble(part[0]);
-                    l2 = Double.parseDouble(part[1]);
+                    double l1 = Double.parseDouble(part[0]);
+                    double l2 = Double.parseDouble(part[1]);
+
                     if (bus.equals("Norte")) {
                         if (mN != null) mN.remove();
                         mN = mMap.addMarker(new MarkerOptions().position(new LatLng(l1, l2)).title("Burra" + bus));
@@ -308,17 +320,18 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             public void run() {
                 String []part= aca.split(":");
                 if(part[0]!=null) {
-                    l1 = Double.parseDouble(part[0]);
-                    l2 = Double.parseDouble(part[1]);
+                    setLanLon(Double.parseDouble(part[0]),Double.parseDouble(part[1]));
                     LimpioMarkers();
+                    if(camaraBurra){
+                        mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(l1, l2)));
+                        camaraBurra=false;
+                    }
+                    mBurra = mMap.addMarker(new MarkerOptions().position(new LatLng(l1, l2)).title("Burra" + bus));
                     if (bus.equals("Norte")) {
-                        mBurra = mMap.addMarker(new MarkerOptions().position(new LatLng(l1, l2)).title("Burra" + bus));
                         mBurra.setIcon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.blue)));
                     } else if (bus.equals("Sur")) {
-                        mBurra = mMap.addMarker(new MarkerOptions().position(new LatLng(l1, l2)).title("Burra" + bus));
                         mBurra.setIcon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.red)));
                     } else if (bus.equals("Este")) {
-                        mBurra= mMap.addMarker(new MarkerOptions().position(new LatLng(l1, l2)).title("Burra" + bus));
                         mBurra.setIcon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.yellow)));
                     }
                 }
@@ -331,5 +344,14 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         if (mN != null) mN.remove();
         if (mS != null) mS.remove();
         if (mE != null) mE.remove();
+    }
+
+    public synchronized void setLanLon (double l1,double l2){
+        this.l1=l1;
+        this.l2=l2;
+    }
+
+    public synchronized double [] getLanLon(){
+        return new double[]{l1,l2};
     }
 }

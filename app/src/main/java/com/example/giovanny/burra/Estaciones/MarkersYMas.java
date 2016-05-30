@@ -13,17 +13,13 @@ import com.google.android.gms.maps.model.MarkerOptions;
  * Created by giovanny on 28/05/16.
  */
 public class MarkersYMas {
-    /*
-    -12.166885, -76.949351 paradero electra
-    -12.159503, -76.956007 paradero san gabriel
-    -12.158397, -76.960507 paradero hospital
-     */
     BusStop[] pS = new BusStop[]{new BusStop(-12.153654, -76.9725183,"Paradero Ciudad"),
             new BusStop(-12.150713, -76.979516,"Paradero Atocongo"),
             new BusStop(-12.170875, -76.945882,"Paradero Pesquero"),
             new BusStop(-12.166885, -76.949351,"Paradero Electra"),
             new BusStop(-12.159503, -76.956007,"Paradero San Gabriel"),
-            new BusStop(-12.158397, -76.960507,"Paradero Hospital")
+            new BusStop(-12.158397, -76.960507,"Paradero Hospital"),
+            new BusStop(-12.181885, -76.942734,"Paradero La Curva")
     };
 
     BusStop[] pN = new BusStop[]{new BusStop(-11.9273604,-77.0556201,"Paradero Trapiche"),

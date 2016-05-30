@@ -17,13 +17,22 @@
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="50dp">
+            android:layout_height="40dp">
 
             <Spinner
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/spiBurra"
-                android:spinnerMode="dropdown" />
+                android:spinnerMode="dropdown"
+                android:layout_gravity="left" />
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/imageButton"
+                android:src="@mipmap/burra"
+                android:layout_gravity="right"
+                android:onClick="CamaraBurra" />
         </LinearLayout>
 
         <fragment

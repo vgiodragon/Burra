@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Burra</string>
     <string name="google_maps_key">AIzaSyBlhU2ivtBBreQbydFqjMrYCGhKEMny4lQ</string>
+    <string name="google_maps_key_apk"> AIzaSyARWrqv-aQCtBwJMJXtqS10_jr34U9xkZY </string>
 </resources>
