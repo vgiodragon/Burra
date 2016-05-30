@@ -17,7 +17,7 @@ import java.net.URL;
  * Created by giovanny on 26/05/16.
  */
 public class ConexionServer {
-    String urlfijo = "http://";
+    String urlfijo = "http://52.37.128.123:8081/petition/";
 
     String sendToUrl(String myurl) throws IOException {
         InputStream is = null;

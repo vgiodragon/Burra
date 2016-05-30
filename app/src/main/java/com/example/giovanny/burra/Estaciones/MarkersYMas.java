@@ -19,7 +19,10 @@ public class MarkersYMas {
             new BusStop(-12.166885, -76.949351,"Paradero Electra"),
             new BusStop(-12.159503, -76.956007,"Paradero San Gabriel"),
             new BusStop(-12.158397, -76.960507,"Paradero Hospital"),
-            new BusStop(-12.181885, -76.942734,"Paradero La Curva")
+            new BusStop(-12.181885, -76.942734,"Paradero La Curva"),
+            new BusStop(-12.1408939,-76.9809145,"Paradero Flores"),
+            new BusStop(-12.122619,-76.9769939,"Paradero Pedagógico")
+
     };
 
     BusStop[] pN = new BusStop[]{new BusStop(-11.9273604,-77.0556201,"Paradero Trapiche"),
